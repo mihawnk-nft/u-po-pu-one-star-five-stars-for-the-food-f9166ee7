@@ -15,7 +15,19 @@ ENTRY = (
 )
 
 
+def validate(text: str) -> None:
+    """Guard the house gate before writing: UTF-8 text, 1-200 chars,
+    not only whitespace, exactly one sentence (one terminal period)."""
+    if not text.strip():
+        raise ValueError("entry must not be only whitespace")
+    if not 1 <= len(text) <= 200:
+        raise ValueError(f"entry is {len(text)} chars, must be 1-200")
+    if text.count(".") != 1 or not text.endswith("."):
+        raise ValueError("entry must be exactly one sentence")
+
+
 def main() -> None:
+    validate(ENTRY)
     output_dir = os.environ.get("OUTPUT_DIR", "/output")
     os.makedirs(output_dir, exist_ok=True)
     path = os.path.join(output_dir, "entry.txt")
